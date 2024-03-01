@@ -13,3 +13,20 @@ vim.keymap.set('n', '<c-l>', ':wincmd l<CR>')
 vim.keymap.set('n', '<leader>h', ':nohlsearch<CR>')
 vim.wo.number = true
 
+vim.opt.clipboard:append("unnamedplus")
+vim.opt.ignorecase = true
+vim.opt.relativenumber = true
+
+local function save_on_insert_leave()
+    vim.api.nvim_create_autocmd("InsertLeave", {
+        pattern = "*",
+        callback = function()
+            --pcall(function() require("prettier").format() end)
+            vim.cmd('silent! write')
+        end
+    })
+end
+
+save_on_insert_leave()
+
+vim.api.nvim_set_keymap('n', '<C-s>', '<cmd>lua require("prettier").format()<CR>:w<CR>', { noremap = true, silent = true })
